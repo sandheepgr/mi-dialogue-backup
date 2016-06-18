@@ -1,17 +1,14 @@
 package com.microideation.app.dialogue.advisors;
 
 import com.microideation.app.dialogue.annotations.PublishEvent;
-import com.microideation.app.dialogue.dictionary.PublishEventType;
+import com.microideation.app.dialogue.dictionary.EventStore;
 import com.microideation.app.dialogue.integration.RabbitIntegration;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by sandheepgr on 17/6/16.
@@ -59,14 +56,14 @@ public class PublishEventAdvisor {
         String channelName = publishEvent.channelName();
 
         // Get the type
-        PublishEventType publishEventType = publishEvent.publishType();
+        EventStore eventStore = publishEvent.eventStore();
 
         // Get the isPersistent
         boolean isPersistent = publishEvent.isPersistent();
 
 
         // Switch the event type
-        switch (publishEventType) {
+        switch (eventStore) {
 
             // Processing for the rabbitmq
             case RABBITMQ:

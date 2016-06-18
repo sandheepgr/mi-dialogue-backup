@@ -8,16 +8,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by sandheepgr on 17/6/16.
+ * Created by sandheepgr on 18/6/16.
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD) //can use in method only.
-public @interface PublishEvent {
+public @interface SubscribeEvent {
 
     public EventStore eventStore();
-    public boolean isPersistent() default false;
     public String channelName();
-
 
 }

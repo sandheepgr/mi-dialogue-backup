@@ -1,13 +1,13 @@
 package com.microideation.app.dialogue.advisors;
 
-import com.microideation.app.dialogue.annotations.PublishEvent;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microideation.app.dialogue.annotations.SubscribeEvent;
-import org.aspectj.lang.JoinPoint;
+import com.microideation.app.dialogue.dictionary.DialogueEvent;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +21,16 @@ public class SubscribeEventAdvisor {
     @Autowired
     ConnectionFactory connectionFactory;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
     @Pointcut(value="execution(public * *(..))")
     public void anyPublicMethod() {  }
 
 
-    @Around(value = "anyPublicMethod() && @annotation(subscribeEvent)")
-    public void subscribeEvent(ProceedingJoinPoint joinPoint,SubscribeEvent subscribeEvent) throws Throwable {
+    @Around(value = "anyPublicMethod() && @annotation(subscribeEvent) &&args(dialogueEvent,..)")
+    public void subscribeEvent(ProceedingJoinPoint joinPoint,SubscribeEvent subscribeEvent,DialogueEvent dialogueEvent) throws Throwable {
 
         // Check if the subscribeEvent is null
         if ( subscribeEvent == null ) {
@@ -36,11 +40,14 @@ public class SubscribeEventAdvisor {
 
         }
 
+        // Set the objectMapper
+        dialogueEvent.setObjectMapper(objectMapper);
 
+        // Create the arrya
+        DialogueEvent dialogueEvents[] = {dialogueEvent};
 
-        System.out.println("Intercepted subscribeEvent - returnValue : ");
-
-        joinPoint.proceed();
+        // Proceed with the new dialogueevents
+        joinPoint.proceed(dialogueEvents);
     }
 
 }

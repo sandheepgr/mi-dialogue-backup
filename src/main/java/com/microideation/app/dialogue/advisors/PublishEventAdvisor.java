@@ -1,6 +1,8 @@
 package com.microideation.app.dialogue.advisors;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microideation.app.dialogue.annotations.PublishEvent;
+import com.microideation.app.dialogue.dictionary.DialogueEvent;
 import com.microideation.app.dialogue.dictionary.EventStore;
 import com.microideation.app.dialogue.integration.RabbitIntegration;
 import org.aspectj.lang.JoinPoint;
@@ -21,6 +23,10 @@ public class PublishEventAdvisor {
     @Autowired
     private RabbitIntegration rabbitIntegration;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
     @Pointcut(value="execution(public * *(..))")
     public void anyPublicMethod() {  }
 
@@ -36,10 +42,14 @@ public class PublishEventAdvisor {
 
         }
 
-        // call the processPublishEvent method for processing
-        processPublishEvent(publishEvent,returnValue);
+        // Set the data
+        String json = objectMapper.writeValueAsString(returnValue);
 
-        System.out.println("Intercepted publishEvent - returnValue : " + returnValue);
+        // Create the DialogueEvent
+        DialogueEvent dialogueEvent = new DialogueEvent(json);
+
+        // call the processPublishEvent method for processing
+        processPublishEvent(publishEvent,dialogueEvent);
 
     }
 

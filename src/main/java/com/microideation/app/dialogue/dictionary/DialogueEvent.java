@@ -1,5 +1,10 @@
 package com.microideation.app.dialogue.dictionary;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
+
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -7,30 +12,89 @@ import java.io.Serializable;
  */
 public class DialogueEvent implements Serializable{
 
-    private String data;
+    private String payload;
+
+    private Header headers;
+
+
+    @JsonIgnore
+    private transient ObjectMapper objectMapper;
+
 
     public DialogueEvent() {}
 
-    public DialogueEvent(String data) {
+    public DialogueEvent(String payload) {
 
-        this.data=data;
+        this.payload = payload;
 
     }
 
 
-    public String getData() {
-        return data;
+    public <T> T getPayload(Class<T> type)  {
+
+        // Check if the object mapper is set
+        if ( objectMapper == null ) {
+
+            throw new UnsupportedOperationException("ObjectMapper instance is not set");
+
+        }
+
+
+        try {
+
+            // return the object
+            return objectMapper.readValue(this.payload,type);
+
+        } catch (IOException e) {
+
+            // Print the stack trace
+            e.printStackTrace();
+
+            // return null
+            throw new RuntimeJsonMappingException(e.getMessage());
+
+        }
+
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public <T> T getPayload(ObjectMapper objectMapper, Class<T> type) {
+
+        // Set the objectMapper
+        this.objectMapper = objectMapper;
+
+        // call the getPayload
+        return getPayload(type);
+
     }
 
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public Header getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Header headers) {
+        this.headers = headers;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public String toString() {
         return "DialogueEvent{" +
-                "data='" + data + '\'' +
+                "payload='" + payload + '\'' +
                 '}';
     }
 }

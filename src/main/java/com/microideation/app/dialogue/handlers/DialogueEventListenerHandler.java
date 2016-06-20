@@ -3,6 +3,7 @@ package com.microideation.app.dialogue.handlers;
 import com.microideation.app.dialogue.annotations.DialogueEventListener;
 import com.microideation.app.dialogue.annotations.SubscribeEvent;
 import com.microideation.app.dialogue.integration.RabbitIntegration;
+import com.microideation.app.dialogue.integration.RedisIntegration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopProxyUtils;
@@ -29,6 +30,9 @@ public class DialogueEventListenerHandler {
 
     @Autowired
     private RabbitIntegration rabbitIntegration;
+
+    @Autowired
+    private RedisIntegration redisIntegration;
 
 
     /**
@@ -116,7 +120,15 @@ public class DialogueEventListenerHandler {
            case RABBITMQ:
 
                // Call the method to create the listener
-               rabbitIntegration.createListenerContainer(listenerClass,method.getName(),subscribeEvent.channelName());
+               rabbitIntegration.registerSubscriber(listenerClass, method.getName(), subscribeEvent.channelName());
+
+               // break
+               break;
+
+           case REDIS:
+
+               // Call the method to create the listener
+               redisIntegration.registerSubscriber(listenerClass, method.getName(), subscribeEvent.channelName());
 
                // break
                break;

@@ -5,6 +5,7 @@ import com.microideation.app.dialogue.annotations.PublishEvent;
 import com.microideation.app.dialogue.dictionary.DialogueEvent;
 import com.microideation.app.dialogue.dictionary.EventStore;
 import com.microideation.app.dialogue.integration.RabbitIntegration;
+import com.microideation.app.dialogue.integration.RedisIntegration;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,6 +23,9 @@ public class PublishEventAdvisor {
 
     @Autowired
     private RabbitIntegration rabbitIntegration;
+
+    @Autowired
+    private RedisIntegration redisIntegration;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -58,19 +62,12 @@ public class PublishEventAdvisor {
      * Method to publish the event to the specified channel and type
      *
      * @param publishEvent  : The received PublishEvent annotation object
-     * @param payload       : The payload from the object
+     * @param dialogueEvent : The payload from the object
      */
-    private void processPublishEvent(PublishEvent publishEvent,Object payload) {
-
-        // Get the channelName
-        String channelName = publishEvent.channelName();
+    private void processPublishEvent(PublishEvent publishEvent,DialogueEvent dialogueEvent) {
 
         // Get the type
         EventStore eventStore = publishEvent.eventStore();
-
-        // Get the isPersistent
-        boolean isPersistent = publishEvent.isPersistent();
-
 
         // Switch the event type
         switch (eventStore) {
@@ -79,7 +76,7 @@ public class PublishEventAdvisor {
             case RABBITMQ:
 
                 // Call the publishToQueue method of the rabbitIntegration
-                rabbitIntegration.publishToQueue(channelName,isPersistent,payload);
+                rabbitIntegration.publishToChannel(publishEvent, dialogueEvent);
 
                 // Break
                 break;
@@ -87,6 +84,9 @@ public class PublishEventAdvisor {
 
             // Processing for the redis type
             case REDIS:
+
+                // Call the publishToQueue method of the rabbitIntegration
+                redisIntegration.publishToChannel(publishEvent, dialogueEvent);
 
                 // break
                 break;

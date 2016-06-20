@@ -20,25 +20,41 @@ import java.io.IOException;
 @DialogueEventListener
 public class SampleServiceImpl implements SampleService {
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @PublishEvent(channelName = "${data.queuename}", eventStore = EventStore.RABBITMQ)
     @Override
-    public TestType test() {
+    public TestType publishToRabbit() {
 
-        System.out.println("Inside test method1");
-        return new TestType("this is test data1");
+        return new TestType("This is test data for rabbit");
 
     }
 
 
     @SubscribeEvent(channelName = "${data.queuename}", eventStore = EventStore.RABBITMQ)
-    public void test2(DialogueEvent dialogueEvent) {
+    public void subscriteToRabbit(DialogueEvent dialogueEvent) {
 
         TestType data = dialogueEvent.getPayload(TestType.class);
 
-        System.out.println("Received the event" + data);
+        System.out.println("Received the event from rabbit" + data);
+
+    }
+
+
+    @PublishEvent(channelName = "com.redis.channel", eventStore = EventStore.REDIS)
+    @Override
+    public TestType publishToRedis() {
+
+        return new TestType("This is test data for redis");
+
+    }
+
+
+    @SubscribeEvent(channelName = "com.redis.channel", eventStore = EventStore.REDIS)
+    public void subscriteToRedis(DialogueEvent dialogueEvent) {
+
+        TestType data = dialogueEvent.getPayload(TestType.class);
+
+        System.out.println("Received the event from redis" + data);
 
     }
 

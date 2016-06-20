@@ -8,7 +8,9 @@ import com.microideation.app.dialogue.dictionary.TestType;
  */
 public interface SampleService {
 
-    public TestType test();
-    public void test2(DialogueEvent dialogueEvent);
+    public TestType publishToRabbit();
+    public void subscriteToRabbit(DialogueEvent dialogueEvent);
+    public TestType publishToRedis();
+    public void subscriteToRedis(DialogueEvent dialogueEvent);
 
 }

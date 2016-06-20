@@ -1,13 +1,11 @@
 package com.microideation.app.dialogue.integration;
 
-import com.rabbitmq.client.AMQP;
+import com.microideation.app.dialogue.annotations.PublishEvent;
+import com.microideation.app.dialogue.dictionary.DialogueEvent;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
-import com.rabbitmq.client.AMQP.Queue.DeclareOk;
-import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -17,14 +15,13 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by sandheepgr on 18/6/16.
  */
 @Component
-public class RabbitIntegration {
+public class RabbitIntegration implements DialogueIntegration {
 
 
 
@@ -87,34 +84,6 @@ public class RabbitIntegration {
 
     }
 
-
-    /**
-     * Method to publish an item to the queue
-     *
-     * @param queueName : Name of the queue to which we need to publish
-     * @param persist   : Flag indicating whether the queue need to be persist
-     * @param object    : The object to be published
-     *
-     * @return          : Return true if the publish was successful
-     *                    Return false otherwise
-     */
-    public boolean publishToQueue(String queueName, boolean persist , Object object) {
-
-        // Get the queue
-        Queue queue = buildQueue(queueName,persist);
-
-        // If the queue is null, return false
-        if ( queue == null ) return false;
-
-        // Send to the queue using the rabbitTemplate
-        rabbitTemplate.convertAndSend(queueName,object);
-
-        // return true;
-        return true;
-
-    }
-
-
     /**
      * Method to create the SimpleMessageListener object for the queue for subscribing
      *
@@ -129,6 +98,8 @@ public class RabbitIntegration {
         // If the queue already contains the listener, then return the instance
         if ( rabbitContainers.containsKey(queueName) ) {
 
+            // TO-DO : Throw the execption that this container cannot have more than
+            // one subscriber
             return rabbitContainers.get(queueName);
 
         }
@@ -161,12 +132,56 @@ public class RabbitIntegration {
     }
 
 
+
+    /**
+     * Method to publish an item to the queue
+     *
+     * @param publishEvent : The instance of publishEvent annotation
+     * @param dialogueEvent: The object to be sent
+     *
+     * @return          : Return the object if the publish was successful
+     *                    Return null otherwise
+     */
+    @Override
+    public Object publishToChannel(PublishEvent publishEvent,DialogueEvent dialogueEvent) {
+
+        // Get the queue
+        Queue queue = buildQueue(publishEvent.channelName(),publishEvent.isPersistent());
+
+        // If the queue is null, return false
+        if ( queue == null ) return false;
+
+        // Send to the queue using the rabbitTemplate
+        rabbitTemplate.convertAndSend(publishEvent.channelName(),dialogueEvent);
+
+        // return the object passed;
+        return dialogueEvent;
+
+    }
+
+    /**
+     * Overridden method to register the subscriber
+     * @param listenerClass : The listener class object
+     * @param methodName    : The name of the method for the listener
+     * @param channelName   : The name of the queue for which this listener is enabled.
+     *
+     */
+    @Override
+    public void registerSubscriber(Object listenerClass,String methodName, String channelName) {
+
+
+        createListenerContainer(listenerClass,methodName,channelName);
+
+    }
+
+
     /**
      * Method to be called when the spring context is finishing
      * This will call the stop on the containers
      */
     @PreDestroy
-    public void stopContainers() {
+    @Override
+    public void stopListeners() {
 
         // Iterate the through the containers and stop them
         for ( SimpleMessageListenerContainer container : rabbitContainers.values() ) {
@@ -176,38 +191,5 @@ public class RabbitIntegration {
         }
 
     }
-
-/*
-
-    protected boolean isQueueExists(String queueName) {
-
-        // Create the connection
-        Connection connection = connectionFactory.createConnection();
-
-        // Create the Channel
-        Channel channel = connection.createChannel(false)
-
-        try {
-
-            // Check the result
-            DeclareOk result = channel.queueDeclarePassive(queueName);
-
-            // Return the boolean expression
-            return result != null;
-
-        } catch (IOException e) {
-
-            // On exception , check if there is RESOURCE_LOCKED which means
-            // queue is existing
-            return e.getCause().getMessage().contains("RESOURCE_LOCKED");
-
-        } finally {
-
-            // finally close the connection
-            connection.close();
-
-        }
-
-    }*/
 
 }

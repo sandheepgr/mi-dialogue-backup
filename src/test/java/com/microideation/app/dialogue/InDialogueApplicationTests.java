@@ -23,8 +23,7 @@ public class InDialogueApplicationTests {
     @Test
     public void simpleTest() {
 
-        sampleService.test();
-        System.out.println("This is a test");
+        sampleService.publishToRabbit();
 
     }
 

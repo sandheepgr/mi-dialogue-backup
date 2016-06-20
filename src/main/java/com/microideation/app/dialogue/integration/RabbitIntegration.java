@@ -34,6 +34,9 @@ public class RabbitIntegration implements DialogueIntegration {
     @Autowired
     private ConnectionFactory connectionFactory;
 
+    @Autowired
+    private IntegrationUtils integrationUtils;
+
 
     @Resource
     private ConcurrentHashMap<String,Queue> rabbitChannels;
@@ -145,14 +148,17 @@ public class RabbitIntegration implements DialogueIntegration {
     @Override
     public Object publishToChannel(PublishEvent publishEvent,DialogueEvent dialogueEvent) {
 
+        // Get the property value for the channelName
+        String channelName = integrationUtils.getEnvironmentProperty(publishEvent.channelName());
+
         // Get the queue
-        Queue queue = buildQueue(publishEvent.channelName(),publishEvent.isPersistent());
+        Queue queue = buildQueue(channelName,publishEvent.isPersistent());
 
         // If the queue is null, return false
         if ( queue == null ) return false;
 
         // Send to the queue using the rabbitTemplate
-        rabbitTemplate.convertAndSend(publishEvent.channelName(),dialogueEvent);
+        rabbitTemplate.convertAndSend(channelName,dialogueEvent);
 
         // return the object passed;
         return dialogueEvent;
@@ -170,6 +176,10 @@ public class RabbitIntegration implements DialogueIntegration {
     public void registerSubscriber(Object listenerClass,String methodName, String channelName) {
 
 
+        // Get the property value for the channelName
+        channelName = integrationUtils.getEnvironmentProperty(channelName);
+
+        // Call the method to create the listener
         createListenerContainer(listenerClass,methodName,channelName);
 
     }

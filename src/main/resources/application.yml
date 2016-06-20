@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mi-dialogue
+
+---
+
+spring:
+  profiles: dev
+  redis:
+    host: 192.168.0.111
+server:
+  port: 8081
+
+dialogue:
+  redis:
+    channel: dialogue.redis.sample.channel
+  rabbit:
+    channel: dialogue.rabbit.sample.channel
+
+
+
+
+

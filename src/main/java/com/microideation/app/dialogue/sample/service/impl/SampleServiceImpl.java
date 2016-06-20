@@ -1,4 +1,4 @@
-package com.microideation.app.dialogue.service.impl;
+package com.microideation.app.dialogue.sample.service.impl;
 
 import com.microideation.app.dialogue.annotations.DialogueEventListener;
 import com.microideation.app.dialogue.annotations.PublishEvent;
@@ -6,18 +6,23 @@ import com.microideation.app.dialogue.annotations.SubscribeEvent;
 import com.microideation.app.dialogue.event.DialogueEvent;
 import com.microideation.app.dialogue.event.EventStore;
 import com.microideation.app.dialogue.event.TestType;
-import com.microideation.app.dialogue.service.SampleService;
+import com.microideation.app.dialogue.sample.service.SampleService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
  * Created by sandheepgr on 17/6/16.
  */
+@Profile("dev")
 @Service
 @DialogueEventListener
 public class SampleServiceImpl implements SampleService {
 
+    @Value("${dialogue.rabbit.channel}")
+    private String channelName;
 
-    @PublishEvent(channelName = "${data.queuename}", eventStore = EventStore.RABBITMQ)
+    @PublishEvent(channelName = "${dialogue.rabbit.channel}", eventStore = EventStore.RABBITMQ)
     @Override
     public TestType publishToRabbit() {
 
@@ -26,7 +31,7 @@ public class SampleServiceImpl implements SampleService {
     }
 
 
-    @SubscribeEvent(channelName = "${data.queuename}", eventStore = EventStore.RABBITMQ)
+    @SubscribeEvent(channelName = "${dialogue.rabbit.channel}", eventStore = EventStore.RABBITMQ)
     public void subscriteToRabbit(DialogueEvent dialogueEvent) {
 
         TestType data = dialogueEvent.getPayload(TestType.class);
@@ -36,7 +41,7 @@ public class SampleServiceImpl implements SampleService {
     }
 
 
-    @PublishEvent(channelName = "com.redis.channel", eventStore = EventStore.REDIS)
+    @PublishEvent(channelName = "${dialogue.redis.channel}", eventStore = EventStore.REDIS)
     @Override
     public TestType publishToRedis() {
 
@@ -45,7 +50,7 @@ public class SampleServiceImpl implements SampleService {
     }
 
 
-    @SubscribeEvent(channelName = "com.redis.channel", eventStore = EventStore.REDIS)
+    @SubscribeEvent(channelName = "${dialogue.redis.channel}", eventStore = EventStore.REDIS)
     public void subscriteToRedis(DialogueEvent dialogueEvent) {
 
         TestType data = dialogueEvent.getPayload(TestType.class);

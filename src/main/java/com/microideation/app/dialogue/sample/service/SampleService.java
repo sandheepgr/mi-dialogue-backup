@@ -1,4 +1,4 @@
-package com.microideation.app.dialogue.service;
+package com.microideation.app.dialogue.sample.service;
 
 import com.microideation.app.dialogue.event.DialogueEvent;
 import com.microideation.app.dialogue.event.TestType;

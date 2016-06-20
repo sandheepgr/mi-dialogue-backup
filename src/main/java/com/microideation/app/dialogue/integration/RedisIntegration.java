@@ -27,6 +27,9 @@ public class RedisIntegration implements DialogueIntegration{
     @Autowired
     RedisConnectionFactory connectionFactory;
 
+    @Autowired
+    private IntegrationUtils integrationUtils;
+
     @Resource
     private  ConcurrentHashMap<String,RedisMessageListenerContainer> redisContainers;
 
@@ -44,8 +47,11 @@ public class RedisIntegration implements DialogueIntegration{
     @Override
     public Object publishToChannel(PublishEvent publishEvent, DialogueEvent dialogueEvent) {
 
+        // Get the property value for the channelName
+        String channelName = integrationUtils.getEnvironmentProperty(publishEvent.channelName());
+
         // Send to the channel
-        dialogueRedisTemplate.convertAndSend(publishEvent.channelName(),dialogueEvent);
+        dialogueRedisTemplate.convertAndSend(channelName,dialogueEvent);
 
         // return the object
         return dialogueEvent;
@@ -61,6 +67,9 @@ public class RedisIntegration implements DialogueIntegration{
      */
     @Override
     public void registerSubscriber(Object listenerClass, String methodName, String channelName) {
+
+        // Get the property value for the channelName
+        channelName = integrationUtils.getEnvironmentProperty(channelName);
 
         // Create the key
         String key = channelName+"#"+methodName;

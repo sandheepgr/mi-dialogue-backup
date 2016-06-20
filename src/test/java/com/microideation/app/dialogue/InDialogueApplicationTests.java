@@ -1,6 +1,6 @@
 package com.microideation.app.dialogue;
 
-import com.microideation.app.dialogue.service.SampleService;
+import com.microideation.app.dialogue.sample.service.SampleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,17 @@ public class InDialogueApplicationTests {
     @Autowired
     private SampleService sampleService;
 
-	@Test
-	public void contextLoads() {
-	}
 
     @Test
-    public void simpleTest() {
+    public void testRedis() {
+
+        sampleService.publishToRedis();
+
+    }
+
+
+    @Test
+    public void testRabbit() {
 
         sampleService.publishToRabbit();
 

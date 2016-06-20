@@ -4,12 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class InDialogueApplication {
+public class MIDialogueApplication {
 
 	public static void main(String[] args) {
 
 
-		SpringApplication.run(InDialogueApplication.class, args);
+		SpringApplication.run(MIDialogueApplication.class, args);
 
 	}
 

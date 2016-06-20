@@ -2,6 +2,8 @@ package com.microideation.app.dialogue.integration;
 
 import com.microideation.app.dialogue.annotations.PublishEvent;
 import com.microideation.app.dialogue.event.DialogueEvent;
+import com.microideation.app.dialogue.support.exception.DialogueException;
+import com.microideation.app.dialogue.support.exception.ErrorCode;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -178,6 +180,14 @@ public class RabbitIntegration implements DialogueIntegration {
 
         // Get the property value for the channelName
         channelName = integrationUtils.getEnvironmentProperty(channelName);
+
+        // Check if the channel is already registered in the instance
+        if ( rabbitChannels.containsKey(channelName) ) {
+
+            throw new DialogueException(ErrorCode.ERR_DUPLICATE_SUBSCRIBER_NOT_SUPPORTED,"Duplicate subscriber for rabbit channel : " +
+                                        channelName + " on method: " + methodName);
+
+        }
 
         // Call the method to create the listener
         createListenerContainer(listenerClass,methodName,channelName);

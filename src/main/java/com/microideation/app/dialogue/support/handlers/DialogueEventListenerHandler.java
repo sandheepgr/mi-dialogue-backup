@@ -1,4 +1,4 @@
-package com.microideation.app.dialogue.handlers;
+package com.microideation.app.dialogue.support.handlers;
 
 import com.microideation.app.dialogue.annotations.DialogueEventListener;
 import com.microideation.app.dialogue.annotations.SubscribeEvent;

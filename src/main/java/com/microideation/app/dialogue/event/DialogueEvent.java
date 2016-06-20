@@ -2,7 +2,8 @@ package com.microideation.app.dialogue.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
+import com.microideation.app.dialogue.support.exception.DialogueException;
+import com.microideation.app.dialogue.support.exception.ErrorCode;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -35,7 +36,7 @@ public class DialogueEvent implements Serializable{
         // Check if the object mapper is set
         if ( objectMapper == null ) {
 
-            throw new UnsupportedOperationException("ObjectMapper instance is not set");
+            throw new DialogueException(ErrorCode.ERR_NO_OBJECT_MAPPER_INSTANCE,"ObjectMapper instance is not set");
 
         }
 
@@ -51,7 +52,7 @@ public class DialogueEvent implements Serializable{
             e.printStackTrace();
 
             // return null
-            throw new RuntimeJsonMappingException(e.getMessage());
+            throw new DialogueException(ErrorCode.ERR_JSON_MAPPING_EXCEPTION,e.getMessage());
 
         }
 

@@ -10,7 +10,7 @@ spring:
 spring:
   profiles: dev
   redis:
-    host: 192.168.0.111
+    host: 192.168.43.64
 server:
   port: 8081
 

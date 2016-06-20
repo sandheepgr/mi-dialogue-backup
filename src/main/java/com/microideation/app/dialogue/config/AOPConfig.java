@@ -10,8 +10,8 @@ import java.util.HashMap;
  * Created by sandheepgr on 17/6/16.
  */
 @Configuration
-@ComponentScan(basePackages = {"com.microideation.app.dialogue.advisors"})
-public class AdvisorConfig {
+@ComponentScan(basePackages = {"com.microideation.app.dialogue.advisors","com.microideation.app.dialogue.support"})
+public class AOPConfig {
 
     @Bean
     public HashMap<String,String> propertyMapping() {

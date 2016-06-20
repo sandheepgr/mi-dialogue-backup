@@ -1,6 +1,6 @@
 package com.microideation.app.dialogue.autoconfig;
 
-import com.microideation.app.dialogue.InDialogueApplication;
+import com.microideation.app.dialogue.MIDialogueApplication;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Import({InDialogueApplication.class})
+@Import({MIDialogueApplication.class})
 public @interface EnableDialogue {
 }

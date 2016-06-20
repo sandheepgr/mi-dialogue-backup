@@ -1,4 +1,4 @@
-package com.microideation.app.dialogue.dictionary;
+package com.microideation.app.dialogue.event;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;

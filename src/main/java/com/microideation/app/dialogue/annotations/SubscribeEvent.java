@@ -1,6 +1,6 @@
 package com.microideation.app.dialogue.annotations;
 
-import com.microideation.app.dialogue.dictionary.EventStore;
+import com.microideation.app.dialogue.event.EventStore;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

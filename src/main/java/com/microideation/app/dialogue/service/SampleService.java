@@ -1,7 +1,7 @@
 package com.microideation.app.dialogue.service;
 
-import com.microideation.app.dialogue.dictionary.DialogueEvent;
-import com.microideation.app.dialogue.dictionary.TestType;
+import com.microideation.app.dialogue.event.DialogueEvent;
+import com.microideation.app.dialogue.event.TestType;
 
 /**
  * Created by sandheepgr on 17/6/16.

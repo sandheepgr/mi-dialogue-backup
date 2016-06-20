@@ -1,6 +1,6 @@
 package com.microideation.app.dialogue.config;
 
-import com.microideation.app.dialogue.dictionary.DialogueEvent;
+import com.microideation.app.dialogue.event.DialogueEvent;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;

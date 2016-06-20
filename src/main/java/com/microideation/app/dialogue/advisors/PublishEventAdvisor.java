@@ -2,8 +2,8 @@ package com.microideation.app.dialogue.advisors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microideation.app.dialogue.annotations.PublishEvent;
-import com.microideation.app.dialogue.dictionary.DialogueEvent;
-import com.microideation.app.dialogue.dictionary.EventStore;
+import com.microideation.app.dialogue.event.DialogueEvent;
+import com.microideation.app.dialogue.event.EventStore;
 import com.microideation.app.dialogue.integration.RabbitIntegration;
 import com.microideation.app.dialogue.integration.RedisIntegration;
 import org.aspectj.lang.JoinPoint;

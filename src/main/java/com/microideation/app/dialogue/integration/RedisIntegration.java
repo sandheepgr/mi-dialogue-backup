@@ -1,7 +1,7 @@
 package com.microideation.app.dialogue.integration;
 
 import com.microideation.app.dialogue.annotations.PublishEvent;
-import com.microideation.app.dialogue.dictionary.DialogueEvent;
+import com.microideation.app.dialogue.event.DialogueEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;

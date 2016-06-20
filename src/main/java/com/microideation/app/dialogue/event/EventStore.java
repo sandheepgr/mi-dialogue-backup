@@ -1,4 +1,4 @@
-package com.microideation.app.dialogue.dictionary;
+package com.microideation.app.dialogue.event;
 
 /**
  * Created by sandheepgr on 18/6/16.

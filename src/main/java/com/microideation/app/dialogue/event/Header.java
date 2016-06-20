@@ -1,7 +1,6 @@
-package com.microideation.app.dialogue.dictionary;
+package com.microideation.app.dialogue.event;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by sandheepgr on 19/6/16.

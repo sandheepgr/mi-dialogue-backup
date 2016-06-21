@@ -13,11 +13,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @WebAppConfiguration
 public class MIDialogueApplicationTests {
 
-    @Autowired
+    /*@Autowired
     private SampleService sampleService;
-
-
+*/
     @Test
+    public void contextLoad() {}
+
+    /*@Test
     public void testRedis() {
 
         sampleService.publishToRedis();
@@ -30,6 +32,6 @@ public class MIDialogueApplicationTests {
 
         sampleService.publishToRabbit();
 
-    }
+    }*/
 
 }

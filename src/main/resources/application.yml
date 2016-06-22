@@ -21,6 +21,10 @@ dialogue:
     channel: dialogue.rabbit.sample.channel
 
 
-
-
-
+kafka:
+  broker:
+    address: 192.168.0.119:9092
+  zookeeper:
+    connect: 192.168.0.119:2181
+  topic: si.topic6
+  messageKey: si.key6
